@@ -1,9 +1,15 @@
 {
   "name": "variant-classnames",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Transform component props to classnames",
   "main": "dist/index.js",
-  "keywords": ["classnames", "react", "tailwind", "css", "tailwindcss"],
+  "keywords": [
+    "classnames",
+    "react",
+    "tailwind",
+    "css",
+    "tailwindcss"
+  ],
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest --verbose",
@@ -12,7 +18,9 @@
     "lint": "eslint --fix --max-warnings=0 --ext .ts --ignore-pattern 'dist' .",
     "build": "npm test && npm run lint && npm run clean && npm run bundle"
   },
-  "files": ["dist/*"],
+  "files": [
+    "dist/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mattvalleycodes/variant-classnames.git"
