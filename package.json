@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Transform component props to classnames",
   "main": "dist/index.js",
+  "keywords": ["classnames", "react", "tailwind", "css", "tailwindcss"],
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest --verbose",
