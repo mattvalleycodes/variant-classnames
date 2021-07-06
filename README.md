@@ -1,5 +1,7 @@
 # variant-classnames
-A simple Javascript utility function for generating CSS class names based on the provided React component props. `variant-classnames` is just like [classnames](https://github.com/JedWatson/classnames), without boilerplate code.
+A simple Javascript utility function for generating CSS class names based on the provided React component props. `variant-classnames` is just like [classnames](https://github.com/JedWatson/classnames), without boilerplate code. `variant-classnames is unit tested and is ready for production use.`
+
+If you're looking for a production-scale application that uses `variant-classnames`, please have a look at [Testfully](https://app.testfully.io).
 
 > The whole classname thing is popular in React eco-system, but it doesn't mean that you can't use `variant-classnames` with any other framework. We're framework/library agnostic.
 
