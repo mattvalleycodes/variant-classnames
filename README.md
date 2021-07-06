@@ -15,12 +15,14 @@ yarn add variant-classnames
 
 
 ## Usage
+
 The `cn` function receives two object arguments:
 - `variants`: A map of prop values and their corresponding CSS classes
 - `props`: Provided props to your component
 
 
-### Examples
+## Examples
+
 Let's build a `<Button />` component. It supports two colors (blue, red), two sizes (small, large), and a disabled state. We will use [Tailwind CSS](https://tailwindcss.com/) to style our components, but you can attach any CSS classes. To keep it simple, the `<Button />` component does not support default props. That said, `variant-classnames` works with default props as well.
 
 ```tsx
@@ -76,6 +78,7 @@ bg-blue-100 text-blue text-sm py-5 px-2 cursor-not-allowed opacity-5
 ```
 
 ## FAQ
+
 _How do I join the value of the `className` prop?_
 `cn` will do the job. For example, `<Button size="small" color="blue" className="my-class" /> ` transforms to:
 
@@ -167,6 +170,6 @@ export const Button:React.FC<ButtonProps> = (props) => {
 }
 ```
 
-### LICENSE MIT
+## LICENSE MIT
 
 Copyright (c) 2021 Matt Valley.
