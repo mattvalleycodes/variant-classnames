@@ -172,6 +172,11 @@ export const Button:React.FC<ButtonProps> = (props) => {
 }
 ```
 
+
+_Can I use cn with objects other than props?_
+
+Yes, you can! The second argument can be anything, as long as it's an object.
+
 ## LICENSE MIT
 
 Copyright (c) 2021 Matt Valley.
