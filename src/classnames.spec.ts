@@ -1,4 +1,5 @@
 import classnames from "./classnames";
+import data from "./classnames.data";
 
 describe("classnames()", () => {
   const props = {
@@ -269,5 +270,12 @@ describe("classnames()", () => {
 
     expect(result).toContain("blue-large");
     expect(result).toContain("blue-normal");
+  });
+
+  data.forEach((td) => {
+    it(td.title, () => {
+      const result = classnames(td.variation, ...td.sources);
+      expect(result).toEqual(td.expect);
+    });
   });
 });
