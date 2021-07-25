@@ -126,6 +126,159 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
       },
     },
   },
+
+  {
+    title: "nested $all when mapped prop has no value",
+    sources: [{ color: red }],
+    expect: ["shared-size-class", red].join(" "),
+    variation: {
+      size: {
+        $all: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "nested $all when mapped prop has a value",
+    sources: [{ color: red, size: large }],
+    expect: ["shared-size-class", large, red].join(" "),
+    variation: {
+      size: {
+        $all: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "nested $all when mapped prop has null value",
+    sources: [{ color: red, size: null }],
+    expect: ["shared-size-class", red].join(" "),
+    variation: {
+      size: {
+        $all: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "nested $all when mapped prop has undefind value",
+    sources: [{ color: red, size: undefined }],
+    expect: ["shared-size-class", red].join(" "),
+    variation: {
+      size: {
+        $all: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "$none when provided value does not have a match",
+    sources: [{ color: red, size: "xl" }],
+    expect: ["shared-size-class", red].join(" "),
+    variation: {
+      size: {
+        $none: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "$none when null provided as the value",
+    sources: [{ color: red, size: null }],
+    expect: ["shared-size-class", red].join(" "),
+    variation: {
+      size: {
+        $none: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "$none when undefined provided as the value",
+    sources: [{ color: red, size: undefined }],
+    expect: ["shared-size-class", red].join(" "),
+    variation: {
+      size: {
+        $none: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "$none when no value is provided",
+    sources: [{ color: red }],
+    expect: ["shared-size-class", red].join(" "),
+    variation: {
+      size: {
+        $none: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "$none won't be applied when there is a matching value",
+    sources: [{ color: red, size: large }],
+    expect: [large, red].join(" "),
+    variation: {
+      size: {
+        $none: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
 ];
 
 export default data;
