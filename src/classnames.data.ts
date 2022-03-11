@@ -505,6 +505,82 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
     variation: { color: [blue, red].join(" ") },
     expect: [blue, red].join(" "),
   },
+
+  {
+    title: "when `$forward` is not available, includes available `className`",
+    sources: [
+      {
+        className: large,
+      },
+    ],
+    expect: [large].join(" "),
+    variation: {},
+  },
+
+  {
+    title: "when `$forward` is not available, includes available `class` values",
+    sources: [
+      {
+        class: red,
+      },
+    ],
+    expect: [red].join(" "),
+    variation: {},
+  },
+
+  {
+    title: "when `$forward` is not available, includes `className` value before `class`",
+    sources: [
+      {
+        className: blue,
+        class: red,
+      },
+    ],
+    expect: [blue, red].join(" "),
+    variation: {},
+  },
+
+  {
+    title: "when `$forward` is set, includes only the requested fields",
+    sources: [
+      {
+        className: blue,
+        class: red,
+      },
+    ],
+    expect: [red].join(" "),
+    variation: {
+      $forward: "class",
+    },
+  },
+
+  {
+    title: "when `$forward` is set to `false`, it should not include any class name",
+    sources: [
+      {
+        className: blue,
+        class: red,
+      },
+    ],
+    expect: "",
+    variation: {
+      $forward: false,
+    },
+  },
+
+  {
+    title: "when `$forward` is set to `true`, includes the default `className` and `class` values",
+    sources: [
+      {
+        className: blue,
+        class: red,
+      },
+    ],
+    expect: [blue, red].join(" "),
+    variation: {
+      $forward: true,
+    },
+  },
 ];
 
 export default data;

@@ -1,16 +1,25 @@
 import isNil from "./is-nil";
 import isString from "./is-string";
+import isBoolean from "./is-boolean";
 
-type MaybeString = string | null | undefined;
+type MaybeString = string | null | undefined | boolean;
 
-export type Variations = {
-  /** @deprecated·use·$always·instead */
-  $all?: MaybeString | Variations;
-  $always?: MaybeString | Variations;
-  $none?: MaybeString | Variations;
-  $nil?: MaybeString | Variations;
+type HookTypes = "$all" | "$always" | "$none" | "$nil" | "$notnil";
+
+type Hooks = {
+  // eslint-disable-next-line no-use-before-define
+  [key in HookTypes]?: MaybeString | Variations;
+};
+
+type HooksWithForward = Hooks & {
+  $forward?: MaybeString;
+};
+
+export type Variations = Hooks & {
   [key: string]: MaybeString | Variations;
 };
+
+export type RootVariations = HooksWithForward & Variations;
 
 export type Source = {
   className?: MaybeString;
@@ -23,6 +32,7 @@ const $all = "$all";
 const $always = "$always";
 const $none = "$none";
 const $nil = "$nil";
+const $forward = "$forward";
 
 /**
  * check if prop is directive $always
@@ -39,13 +49,15 @@ const getAlwaysVariation = (variations: Variations | string | null | undefined):
 
 export function get(
   prop: string,
-  valueVariations: Variations | string | null | undefined,
+  valueVariations: Variations | MaybeString,
   source: Source,
-): MaybeString {
+): Exclude<MaybeString, boolean> {
   let correspondingSourceValue = source[prop];
 
   // for the provided prop, there is no variation, we should not continue
   if (isNil(valueVariations)) return null;
+
+  if (isBoolean(valueVariations)) return valueVariations.toString();
 
   // this is a $always hook and if it is set to actual CSS classes (string), we should return value here.
   if (isAlways(prop)) {
@@ -106,26 +118,66 @@ export function get(
     .join(" ");
 }
 
-function classnames(variations: Variations, ...inputs: Array<Source | null | undefined>): string {
+/**
+ * @private
+ * @description function `forward` computes the CSS classes that should
+ * be included in final list of CSS classes.
+ *
+ * @param variations
+ * @param source
+ */
+function forward($forwardValue: MaybeString, source: Source): string {
+  if ($forwardValue === false) {
+    return "";
+  }
+
+  /**
+   * `toForward` defines value of what fields should be extracted, combined
+   * and returned as the list of CSS classes to be included as `extras`.
+   * We're defaulting to `["className", "class"]` to keep the code backward
+   * compatible.
+   * When `$forward=true` is provided, it means that we should forward the
+   * default props including: `className`, and `class`.
+   */
+
+  const fields =
+    isNil($forwardValue) || $forwardValue === true
+      ? ["className", "class"]
+      : $forwardValue.split(",").map((v) => v.trim());
+
+  return fields
+    .map((fieldName): string => {
+      const value = source[fieldName];
+      if (isNil(value)) return "";
+      if (isString(value)) return value.trim();
+
+      return String(value).trim();
+    })
+    .filter((v) => v.length)
+    .join(" ");
+}
+
+function classnames(variations: RootVariations, ...inputs: Array<Source | null | undefined>): string {
   const sources = inputs.filter((source) => !isNil(source)) as Source[];
 
-  const alwaysVar = getAlwaysVariation(variations);
+  const vars = Object.keys(variations)
+    .filter((v) => v !== $forward)
+    .map((prop) => {
+      if (isAlways(prop)) {
+        const allV = getAlwaysVariation(variations);
 
-  const vars = Object.keys(variations).map((prop) => {
-    if (isAlways(prop) && (isString(alwaysVar) || isNil(alwaysVar))) {
-      return alwaysVar;
-    }
+        if (isNil(allV)) return "";
+        if (isBoolean(allV)) return allV.toString();
+        if (isString(allV)) return allV;
+      }
 
-    const variation = variations[prop];
+      const variation = variations[prop];
+      if (isNil(variation)) return null;
 
-    if (isNil(variation)) {
-      return null;
-    }
+      return sources.map((source) => get(prop, variation, source)).filter((v) => !isNil(v));
+    });
 
-    return sources.map((source) => get(prop, variation, source)).filter((v) => !isNil(v));
-  });
-
-  const extras = sources.map((source) => source.className);
+  const extras = sources.map((source) => forward(variations.$forward, source));
 
   return [...vars, ...extras].filter((s) => !isNil(s) && s.length > 0).join(" ");
 }
