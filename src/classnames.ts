@@ -60,8 +60,8 @@ export function get(
   // there is no further variatios to inspect, we're dealing with props -> css class case here
   // we need to finish the execution at this point
   if (isString(valueVariations)) {
-    // prop -> css class basically means include classes when prop value is `true`
-    if (correspondingSourceValue === true) return valueVariations;
+    // prop -> css class basically means include classes when prop value is `truthy`
+    if (Boolean(correspondingSourceValue) === true) return valueVariations;
 
     // prop -> css class and prop value is not true, this is no match so we should return nothing
     return null;
@@ -110,12 +110,14 @@ function classnames(variations: Variations, ...inputs: Array<Source | null | und
   const sources = inputs.filter((source) => !isNil(source)) as Source[];
 
   const alwaysVar = getAlwaysVariation(variations);
+
   const vars = Object.keys(variations).map((prop) => {
     if (isAlways(prop) && (isString(alwaysVar) || isNil(alwaysVar))) {
       return alwaysVar;
     }
 
     const variation = variations[prop];
+
     if (isNil(variation)) {
       return null;
     }
