@@ -334,7 +334,7 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
   },
 
   {
-    title: "nested $all when mapped prop has undefind value (deprecated)",
+    title: "nested $all when mapped prop has undefined value (deprecated)",
     sources: [{ color: red, size: undefined }],
     expect: ["shared-size-class", red].join(" "),
     variation: {
@@ -351,7 +351,7 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
   },
 
   {
-    title: "nested $always when mapped prop has undefind value",
+    title: "nested $always when mapped prop has undefined value",
     sources: [{ color: red, size: undefined }],
     expect: ["shared-size-class", red].join(" "),
     variation: {
@@ -505,7 +505,62 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
     variation: { color: [blue, red].join(" ") },
     expect: [blue, red].join(" "),
   },
-
+  {
+    title: "$notnil and matching variants when provided with valid value",
+    sources: [{ color: "red" }],
+    variation: {
+      color: { red, $notnil: large },
+    },
+    expect: [large, red].join(" "),
+  },
+  {
+    title: "$notnil when null provided as the value",
+    sources: [{ color: null }],
+    variation: {
+      color: { red, $notnil: large },
+    },
+    expect: large,
+  },
+  {
+    title: "$notnil when null provided as the value",
+    sources: [{ color: undefined }],
+    variation: {
+      color: { red, $notnil: large },
+    },
+    expect: large,
+  },
+  {
+    title: "$notnil when false provided as the value",
+    sources: [{ color: false }],
+    variation: {
+      color: { red, $notnil: large },
+    },
+    expect: large,
+  },
+  {
+    title: "$notnil when true provided as the value",
+    sources: [{ color: true }],
+    variation: {
+      color: { red, $notnil: large },
+    },
+    expect: large,
+  },
+  {
+    title: "$notnil when object provided as the value",
+    sources: [{ color: {} }],
+    variation: {
+      color: { red, $notnil: large },
+    },
+    expect: large,
+  },
+  {
+    title: "$notnil when provided a valid value with not matches",
+    sources: [{ color: blue }],
+    variation: {
+      color: { red, $notnil: large },
+    },
+    expect: large,
+  },
   {
     title: "when `$forward` is not available, includes available `className`",
     sources: [
