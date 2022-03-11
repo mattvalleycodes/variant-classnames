@@ -451,6 +451,60 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
       },
     },
   },
+  {
+    title: "empty ouput when source is falsy: string",
+    sources: [{ color: "" }],
+    variation: { color: [blue, red].join(" ") },
+    expect: "",
+  },
+  {
+    title: "empty ouput when source is falsy: undefined",
+    sources: [{ color: undefined }],
+    variation: { color: [blue, red].join(" ") },
+    expect: "",
+  },
+  {
+    title: "empty ouput when source is falsy: null",
+    sources: [{ color: null }],
+    variation: { color: [blue, red].join(" ") },
+    expect: "",
+  },
+  {
+    title: "empty ouput when source is falsy: number",
+    sources: [{ color: 0 }],
+    variation: { color: [blue, red].join(" ") },
+    expect: "",
+  },
+  {
+    title: "empty ouput when source is falsy: boolean",
+    sources: [{ color: false }],
+    variation: { color: [blue, red].join(" ") },
+    expect: "",
+  },
+  {
+    title: "valid ouput when source is thruthy: string",
+    sources: [{ color: "123" }],
+    variation: { color: [blue, red].join(" ") },
+    expect: [blue, red].join(" "),
+  },
+  {
+    title: "valid ouput when source is thruthy: number",
+    sources: [{ color: 123 }],
+    variation: { color: [blue, red].join(" ") },
+    expect: [blue, red].join(" "),
+  },
+  {
+    title: "valid ouput when source is thruthy: boolean",
+    sources: [{ color: true }],
+    variation: { color: [blue, red].join(" ") },
+    expect: [blue, red].join(" "),
+  },
+  {
+    title: "valid ouput when source is thruthy: object",
+    sources: [{ color: {} }],
+    variation: { color: [blue, red].join(" ") },
+    expect: [blue, red].join(" "),
+  },
 ];
 
 export default data;
