@@ -237,41 +237,6 @@ describe("classnames()", () => {
     expect(result).toEqual("");
   });
 
-  it("should accept $all in any level", (): void => {
-    const v = {
-      $all: "all-vars",
-      color: {
-        $all: "all-colors",
-        red: {},
-        blue: {
-          $all: "all-blues",
-          size: {
-            $all: "all-sizes",
-            small: "blue-small",
-            large: "blue-large",
-          },
-          outline: {
-            $all: "all-outlines",
-            true: "blue-outline",
-            false: "blue-normal",
-          },
-        },
-      },
-    };
-
-    const s = { color: "blue", size: "large", outline: false };
-
-    const result = classnames(v, s);
-    expect(result).toContain("all-vars");
-    expect(result).toContain("all-colors");
-    expect(result).toContain("all-blues");
-    expect(result).toContain("all-sizes");
-    expect(result).toContain("all-outlines");
-
-    expect(result).toContain("blue-large");
-    expect(result).toContain("blue-normal");
-  });
-
   data.forEach((td) => {
     it(td.title, () => {
       const result = classnames(td.variation, ...td.sources);

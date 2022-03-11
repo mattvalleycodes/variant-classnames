@@ -17,10 +17,17 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
   },
 
   {
-    title: "standard map of props to classnames with $all hook",
+    title: "standard map of props to classnames with $all hook (deprecated)",
     sources: [{ color: blue, size: large }],
     expect: [gray, blue, pink, large].join(" "),
     variation: { color: { $all: gray, red, blue }, size: { $all: pink, small, large } },
+  },
+
+  {
+    title: "standard map of props to classnames with $always hook",
+    sources: [{ color: blue, size: large }],
+    expect: [gray, blue, pink, large].join(" "),
+    variation: { color: { $always: gray, red, blue }, size: { $always: pink, small, large } },
   },
 
   {
@@ -45,7 +52,7 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
   },
 
   {
-    title: "accepts variations for $all",
+    title: "accepts variations for $all (deprecated)",
     sources: [{ color: blue, size: large }],
     expect: [blue, large].join(" "),
     variation: {
@@ -64,7 +71,26 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
   },
 
   {
-    title: "accepts variations for $all nested in other variations",
+    title: "accepts variations for $always",
+    sources: [{ color: blue, size: large }],
+    expect: [blue, large].join(" "),
+    variation: {
+      $always: {
+        color: {
+          red,
+          blue,
+        },
+
+        size: {
+          small,
+          large,
+        },
+      },
+    },
+  },
+
+  {
+    title: "accepts variations for $all nested in other variations (deprecated)",
     sources: [{ color: blue, size: large }],
     expect: [red, large].join(" "),
     variation: {
@@ -79,6 +105,85 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
         },
         blue: {
           $all: {
+            size: {
+              small: blue,
+              large: red,
+            },
+          },
+        },
+      },
+      size: { small, large },
+    },
+  },
+
+  {
+    title: "should accept $all in any level (deprecated)",
+    sources: [{ color: "blue", size: "large", outline: false }],
+    expect: "all-vars all-blues all-sizes blue-large all-outlines blue-normal all-colors",
+    variation: {
+      $all: "all-vars",
+      color: {
+        $all: "all-colors",
+        red: {},
+        blue: {
+          $all: "all-blues",
+          size: {
+            $all: "all-sizes",
+            small: "blue-small",
+            large: "blue-large",
+          },
+          outline: {
+            $all: "all-outlines",
+            true: "blue-outline",
+            false: "blue-normal",
+          },
+        },
+      },
+    },
+  },
+
+  {
+    title: "should accept $always in any level (deprecated)",
+    sources: [{ color: "blue", size: "large", outline: false }],
+    expect: "all-vars all-blues all-sizes blue-large all-outlines blue-normal all-colors",
+    variation: {
+      $always: "all-vars",
+      color: {
+        $all: "all-colors",
+        red: {},
+        blue: {
+          $all: "all-blues",
+          size: {
+            $all: "all-sizes",
+            small: "blue-small",
+            large: "blue-large",
+          },
+          outline: {
+            $all: "all-outlines",
+            true: "blue-outline",
+            false: "blue-normal",
+          },
+        },
+      },
+    },
+  },
+
+  {
+    title: "accepts variations for $always nested in other variations",
+    sources: [{ color: blue, size: large }],
+    expect: [red, large].join(" "),
+    variation: {
+      color: {
+        red: {
+          $always: {
+            size: {
+              small: red,
+              large: blue,
+            },
+          },
+        },
+        blue: {
+          $always: {
             size: {
               small: blue,
               large: red,
@@ -111,9 +216,8 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
   {
     title: "accepts variations for $nil",
     sources: [{ color: null, default: pink }],
-    expect: ["all-classes", pink].join(" "),
+    expect: pink,
     variation: {
-      $all: "all-classes",
       color: {
         red,
         blue,
@@ -128,7 +232,7 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
   },
 
   {
-    title: "nested $all when mapped prop has no value",
+    title: "nested $all when mapped prop has no value (deprecated)",
     sources: [{ color: red }],
     expect: ["shared-size-class", red].join(" "),
     variation: {
@@ -145,7 +249,24 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
   },
 
   {
-    title: "nested $all when mapped prop has a value",
+    title: "nested $always when mapped prop has no value",
+    sources: [{ color: red }],
+    expect: ["shared-size-class", red].join(" "),
+    variation: {
+      size: {
+        $always: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "nested $all when mapped prop has a value (deprecated)",
     sources: [{ color: red, size: large }],
     expect: ["shared-size-class", large, red].join(" "),
     variation: {
@@ -162,7 +283,24 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
   },
 
   {
-    title: "nested $all when mapped prop has null value",
+    title: "nested $always when mapped prop has a value",
+    sources: [{ color: red, size: large }],
+    expect: ["shared-size-class", large, red].join(" "),
+    variation: {
+      size: {
+        $always: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "nested $all when mapped prop has null value (deprecated)",
     sources: [{ color: red, size: null }],
     expect: ["shared-size-class", red].join(" "),
     variation: {
@@ -179,12 +317,46 @@ const data: Array<{ title: string; variation: Variations; sources: Array<Source>
   },
 
   {
-    title: "nested $all when mapped prop has undefind value",
+    title: "nested $always when mapped prop has null value",
+    sources: [{ color: red, size: null }],
+    expect: ["shared-size-class", red].join(" "),
+    variation: {
+      size: {
+        $always: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "nested $all when mapped prop has undefind value (deprecated)",
     sources: [{ color: red, size: undefined }],
     expect: ["shared-size-class", red].join(" "),
     variation: {
       size: {
         $all: "shared-size-class",
+        small,
+        large,
+      },
+      color: {
+        red,
+        blue,
+      },
+    },
+  },
+
+  {
+    title: "nested $always when mapped prop has undefind value",
+    sources: [{ color: red, size: undefined }],
+    expect: ["shared-size-class", red].join(" "),
+    variation: {
+      size: {
+        $always: "shared-size-class",
         small,
         large,
       },
