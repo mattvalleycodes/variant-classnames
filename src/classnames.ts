@@ -32,6 +32,7 @@ const $all = "$all";
 const $always = "$always";
 const $none = "$none";
 const $nil = "$nil";
+const $notnil = "$notnil";
 const $forward = "$forward";
 
 /**
@@ -73,19 +74,29 @@ export function get(
   // we need to finish the execution at this point
   if (isString(valueVariations)) {
     // prop -> css class basically means include classes when prop value is `truthy`
-    if (Boolean(correspondingSourceValue) === true) return valueVariations;
+    if (Boolean(correspondingSourceValue) === true) {
+      return valueVariations;
+    }
 
     // prop -> css class and prop value is not true, this is no match so we should return nothing
     return null;
   }
 
   // when prop has no value, we pretent value is $nil to be able to kick off $nil hook later.
-  if (isNil(correspondingSourceValue)) correspondingSourceValue = $nil;
+  if (isNil(correspondingSourceValue)) {
+    correspondingSourceValue = $nil;
+  }
 
   // at this stage we're dealing with prop -> a range of variations (this is an object)
   // we need to resolve the variation that match current value of the prop
   // if value of the prop doesn't have a match, we should divert to $none hook here.
-  const matchingVariations = valueVariations[correspondingSourceValue.toString()] || valueVariations[$none];
+  let matchingVariations = valueVariations[correspondingSourceValue.toString()] || valueVariations[$none];
+
+  // when $notnil was provided and prop value is not nil we append $nonil value to matching variations
+  // have to filter undefined in case there were no matches
+  if (!isNil(valueVariations[$notnil]) && !isNil(correspondingSourceValue)) {
+    matchingVariations = [valueVariations[$notnil], matchingVariations].filter(Boolean).join(" ");
+  }
 
   const alwaysVar = getAlwaysVariation(valueVariations);
 
@@ -105,7 +116,9 @@ export function get(
     }
 
     // prop value (or $none) maps to string, if we don't have $always just return what we got
-    if (isNil(alwaysVar)) return matchingVariations;
+    if (isNil(alwaysVar)) {
+      return matchingVariations;
+    }
 
     // prop value (or $none) maps to string, we also got the $always hook, combine and return
     return `${alwaysVar} ${matchingVariations}`;
