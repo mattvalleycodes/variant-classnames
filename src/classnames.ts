@@ -195,4 +195,16 @@ function classnames(variations: RootVariations, ...inputs: Array<Source | null |
   return [...vars, ...extras].filter((s) => !isNil(s) && s.length > 0).join(" ");
 }
 
+export function classnamesWithScope<T>(scope: T, input: Source | null | undefined): Record<keyof T, string> {
+  return Object.entries(scope).reduce(
+    (acc, [key, variants]) => ({
+      ...acc,
+      [key]: classnames(variants, input),
+    }),
+    {} as Record<keyof T, string>,
+  );
+}
+
+export { classnames as vc, classnamesWithScope as vcs };
+
 export default classnames;
