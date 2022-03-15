@@ -1,4 +1,4 @@
-import classnames from "./classnames";
+import classnames, { classnamesWithScope } from "./classnames";
 import data from "./classnames.data";
 
 describe("classnames()", () => {
@@ -235,6 +235,47 @@ describe("classnames()", () => {
 
     const result = classnames(v, s);
     expect(result).toEqual("");
+  });
+
+  it("classnames with scope should resolved as classnames", (): void => {
+    const v = {
+      size: {
+        sm: "p-1",
+        md: "p-2",
+      },
+    };
+
+    const sc = {
+      container: {
+        ...v,
+        $always: "border border-gray",
+        color: {
+          red: "bg-red",
+          blue: "bg-blue",
+        },
+      },
+      wrapper: {
+        ...v,
+        $forward: false,
+        $always: "border",
+        color: {
+          red: "border-red",
+          blue: "border-blue",
+        },
+      },
+    };
+
+    const s = { color: "red", size: "sm", className: "CLASSNAME" };
+
+    const result = classnamesWithScope(sc, s);
+
+    // expect keys to be returned back
+    expect(result).toHaveProperty("container");
+    expect(result).toHaveProperty("wrapper");
+
+    // expect key values to match a classnames output
+    expect(classnames(sc.container, s)).toEqual(result.container);
+    expect(classnames(sc.wrapper, s)).toEqual(result.wrapper);
   });
 
   data.forEach((td) => {
