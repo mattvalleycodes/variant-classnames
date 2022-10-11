@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-use-before-define */
+
 import isNil from "./is-nil";
 import isString from "./is-string";
 import isBoolean from "./is-boolean";
@@ -7,7 +10,6 @@ type MaybeString = string | null | undefined | boolean;
 type HookTypes = "$all" | "$always" | "$none" | "$nil" | "$notnil";
 
 type Hooks = {
-  // eslint-disable-next-line no-use-before-define
   [key in HookTypes]?: MaybeString | Variations;
 };
 
@@ -45,7 +47,7 @@ const isAlways = (prop: string): boolean => prop === $all || prop === $always;
  * get the value from directive $always or always
  * @deprated must remove after completing deprecation of $all directive
  */
-const getAlwaysVariation = (variations: Variations | string | null | undefined): MaybeString | Variations =>
+const getAlwaysVariation = (variations?: Variations): MaybeString | Variations =>
   variations?.[$always] || variations?.[$all];
 
 export function get(
@@ -110,7 +112,7 @@ export function get(
 
       // $always maps to an object we should dig more
       return Object.keys(alwaysVar)
-        .map((nestedProp) => get(nestedProp, alwaysVar[nestedProp], source))
+        .map((nestedProp) => get(nestedProp, (alwaysVar as any)[nestedProp], source))
         .filter((v) => !isNil(v))
         .join(" ");
     }
@@ -125,7 +127,7 @@ export function get(
   }
 
   return Object.keys(matchingVariations)
-    .map((nestedProp) => get(nestedProp, matchingVariations[nestedProp], source))
+    .map((nestedProp) => get(nestedProp, (matchingVariations as any)?.[nestedProp], source))
     .concat(isString(alwaysVar) ? alwaysVar : null)
     .filter((v) => !isNil(v))
     .join(" ");
@@ -170,7 +172,8 @@ function forward($forwardValue: MaybeString, source: Source): string {
     .join(" ");
 }
 
-function classnames(variations: RootVariations, ...inputs: Array<Source | null | undefined>): string {
+function classnames(_variations: unknown, ...inputs: Array<Source | null | undefined>): string {
+  const variations = _variations as RootVariations;
   const sources = inputs.filter((source) => !isNil(source)) as Source[];
 
   const vars = Object.keys(variations)
@@ -195,7 +198,10 @@ function classnames(variations: RootVariations, ...inputs: Array<Source | null |
   return [...vars, ...extras].filter((s) => !isNil(s) && s.length > 0).join(" ");
 }
 
-export function classnamesWithScope<T>(scope: T, input: Source | null | undefined): Record<keyof T, string> {
+export function classnamesWithScope<T extends Record<string, any>>(
+  scope: T,
+  input: Source | null | undefined,
+): Record<keyof T, string> {
   return Object.entries(scope).reduce(
     (acc, [key, variants]) => ({
       ...acc,
