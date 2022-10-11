@@ -294,7 +294,8 @@ describe("classnames()", () => {
         color: "red" | "blue";
       };
 
-      const variants: VariantsOf<Props> = {
+      // root-level field declration
+      let variants: VariantsOf<Props> = {
         disabled: {
           true: "disabled-button",
           false: "enabled-button",
@@ -306,6 +307,21 @@ describe("classnames()", () => {
         color: {
           red: "red-button",
           blue: "blue-button",
+        },
+      };
+
+      variants = {
+        disabled: {
+          true: {
+            size: {
+              sm: "sm-button",
+            },
+          },
+          false: {
+            size: {
+              lg: "lg-button",
+            },
+          },
         },
       };
 
