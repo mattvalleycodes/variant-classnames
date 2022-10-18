@@ -1,4 +1,5 @@
 import classnames, { classnamesWithScope } from "./classnames";
+import type { VariantsOf } from "./types";
 import data from "./classnames.data";
 
 describe("classnames()", () => {
@@ -282,6 +283,49 @@ describe("classnames()", () => {
     it(td.title, () => {
       const result = classnames(td.variation, ...td.sources);
       expect(result).toEqual(td.expect);
+    });
+  });
+
+  describe("VariantsOf type", () => {
+    it("reads fields correctly", () => {
+      type Props = {
+        disabled: boolean;
+        size: "sm" | "lg";
+        color: "red" | "blue";
+      };
+
+      // root-level field declration
+      let variants: VariantsOf<Props> = {
+        disabled: {
+          true: "disabled-button",
+          false: "enabled-button",
+        },
+        size: {
+          sm: "sm-button",
+          lg: "lg-button",
+        },
+        color: {
+          red: "red-button",
+          blue: "blue-button",
+        },
+      };
+
+      variants = {
+        disabled: {
+          true: {
+            size: {
+              sm: "sm-button",
+            },
+          },
+          false: {
+            size: {
+              lg: "lg-button",
+            },
+          },
+        },
+      };
+
+      expect(variants).toBeTruthy();
     });
   });
 });
